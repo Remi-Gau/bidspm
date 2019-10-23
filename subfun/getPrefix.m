@@ -32,6 +32,13 @@ switch step
             prefix = [spm_get_defaults('smooth.prefix') num2str(degreeOfSmoothing) prefix];
         end
         
+    case 'MVPA'
+        prefix = prefixForDummies(opt);
+        prefix = prefixForSTC(prefix, opt);
+        
+        % for the motion regressors txt file
+        motionRegressorPrefix = prefix;
+        
 end
 
 
@@ -46,6 +53,7 @@ else
     prefix = '';
 end
 end
+
 
 function prefix = prefixForSTC(prefix, opt)
 % Check the slice timing information is not in the metadata and not added

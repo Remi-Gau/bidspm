@@ -18,6 +18,11 @@ if nargin<3
     fprintf('opt.mat file loaded \n\n')
 end
 
+if opt.isMVPA
+    mvpaSuffix = 'MVPA_';
+else
+    mvpaSuffix = '';
+end
 
 
 %%
@@ -25,7 +30,11 @@ end
 [group, opt, BIDS] = getData(opt);
 
 % creates prefix to look for
-[prefix, motionRegressorPrefix] = getPrefix('FFX', opt, degreeOfSmoothing);
+if opt.isMVPA
+    [prefix, motionRegressorPrefix] = getPrefix('MVPA', opt, degreeOfSmoothing);
+else
+    [prefix, motionRegressorPrefix] = getPrefix('FFX', opt, degreeOfSmoothing);
+end
 
 % Check the slice timing information is not in the metadata and not added
 % manually in the opt variable.
@@ -125,27 +134,8 @@ switch action
                             fullfile(subFuncDataDir, ...
                             ['rp_', motionRegressorPrefix, fileName(1:end-4),'.txt']);
 
-
-
-
-
-
-
-
-
-
                         % Convert the tsv files to a mat file to be used by SPM
-                        % DO WE NEED TO TRIM ONSET BY A DURATION EQUIVALENT
-                        % TO THE NUMBER OF DUMMIES REMOVED
                         convertTsv2mat(tsvFile{sesCounter,1})
-
-
-
-
-
-
-
-
 
                         matlabbatch{1}.spm.stats.fmri_spec.sess(sesCounter).scans = cellstr(files);
 
@@ -207,7 +197,7 @@ switch action
                 JOBS_dir = fullfile(opt.JOBS_dir, subNumber);
                 [~, ~, ~] = mkdir(JOBS_dir);
 
-                save(fullfile(JOBS_dir, ['jobs_matlabbatch_SPM12_ffx_',...
+                save(fullfile(JOBS_dir, ['jobs_matlabbatch_SPM12_ffx_', mvpaSuffix,...
                     num2str(degreeOfSmoothing),'_',opt.taskName,'.mat']), ...
                     'matlabbatch')
 
@@ -238,7 +228,7 @@ switch action
                 JOBS_dir = fullfile(opt.JOBS_dir, subNumber);
 
                 % Create Contrasts
-                [~, contrasts] = pmCon(ffxDir, opt.taskName, opt);
+                contrasts = pmCon(ffxDir, opt.taskName, opt);
 
                 matlabbatch{1}.spm.stats.con.spmmat = cellstr(fullfile(ffxDir,'SPM.mat'));
 
@@ -252,7 +242,7 @@ switch action
 
                 % Save ffx matlabbatch in JOBS
                 save(fullfile(JOBS_dir, ...
-                    ['jobs_matlabbatch_SPM12_ffx_',...
+                    ['jobs_matlabbatch_SPM12_ffx_', mvpaSuffix,...
                     num2str(degreeOfSmoothing),'_',...
                     opt.taskName,'_Contrasts.mat']), ...
                     'matlabbatch') % save the matlabbatch
@@ -261,7 +251,7 @@ switch action
                 toc
             end
 
-        end % switch
+        end
 end
 
 end
