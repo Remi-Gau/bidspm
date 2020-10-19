@@ -29,6 +29,9 @@ function bidsSpatialPrepro(opt)
         fprintf('opt.mat file loaded \n\n');
     end
 
+    % open graphic window (if possible)
+    setGraphicWindow();
+
     % load the subjects/Groups information and the task name
     [group, opt, BIDS] = getData(opt);
 
@@ -96,6 +99,11 @@ function bidsSpatialPrepro(opt)
             saveMatlabBatch(matlabbatch, 'spatialPreprocessing', opt, subID);
 
             spm_jobman('run', matlabbatch);
+
+            % copy graphic output to functional directory of first session
+            runs = getInfo(BIDS, subID, opt, 'Runs', sessions{1});
+            [~, subFuncDataDir] = getBoldFilename(BIDS, subID, sessions{1}, runs{1}, opt);
+            copyGraphWindownOutput(subFuncDataDir, 'spatialPreprocessing');
 
         end
     end
