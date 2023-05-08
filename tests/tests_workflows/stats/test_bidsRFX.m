@@ -173,21 +173,6 @@ function test_bidsRFX_rfx()
 
 end
 
-function test_bidsRFX_mean()
-
-  opt = setOptions('vislocalizer',  '', 'pipelineType', 'stats');
-
-  matlabbatch =  bidsRFX('meanAnatAndMask', opt);
-  assertEqual(fieldnames(matlabbatch{1}.spm.util), {'imcalc'});
-  assertEqual(fieldnames(matlabbatch{2}.spm.util), {'imcalc'});
-  assertEqual(fieldnames(matlabbatch{3}.spm.spatial), {'smooth'});
-  assertEqual(fieldnames(matlabbatch{4}.spm.util), {'imcalc'});
-  assertEqual(fieldnames(matlabbatch{5}), {'cfg_basicio'});
-  assertEqual(fieldnames(matlabbatch{6}.spm.util), {'checkreg'});
-  assertEqual(numel(matlabbatch), 6);
-
-end
-
 function test_bidsRFX_contrast()
 
   opt = setOptions('vislocalizer', '', 'pipelineType', 'stats');

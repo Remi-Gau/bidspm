@@ -1,10 +1,5 @@
 function matlabbatch = bidsRFX(varargin)
   %
-  %
-  % - creates a mean structural image and mean mask over the sample
-  %
-  % OR
-  %
   % - specifies and estimates the group level model,
   % - computes the group level contrasts.
   %
@@ -12,8 +7,7 @@ function matlabbatch = bidsRFX(varargin)
   %
   %  bidsRFX(action, opt, 'nodeName', '')
   %
-  % :param action: Action to be conducted: ``'RFX'`` or
-  %                ``'meanAnatAndMask'`` or ``'contrast'``
+  % :param action: Action to be conducted: ``'RFX'`` or ``'contrast'``
   % :type action: char
   %
   % :type opt:  structure
@@ -29,8 +23,7 @@ function matlabbatch = bidsRFX(varargin)
 
   % (C) Copyright 2020 bidspm developers
 
-  allowedActions = @(x) ismember(lower(x), ...
-                                 {'meananatandmask', 'rfx', 'contrasts'});
+  allowedActions = @(x) ismember(lower(x), {'rfx', 'contrasts'});
 
   args = inputParser;
 
@@ -59,10 +52,9 @@ function matlabbatch = bidsRFX(varargin)
   matlabbatch = {};
 
   % TODO refactor
-  % - extract function for anat and mask computation
   % - merge rfx and ffx into a single "stats" workflow
 
-  if ismember(lower(action), {'meananatandmask', 'rfx', 'contrasts'})
+  if ismember(lower(action), {'rfx', 'contrasts'})
     opt.dir.output = fullfile(opt.dir.stats, 'derivatives', 'bidspm-groupStats');
     opt.dir.jobs = fullfile(opt.dir.output, 'jobs',  strjoin(opt.taskName, ''));
   end
@@ -80,13 +72,6 @@ function matlabbatch = bidsRFX(varargin)
   end
 
   switch lower(action)
-
-    case 'meananatandmask'
-      % TODO need to rethink where to save the anat and mask
-      matlabbatch = setBatchMeanAnatAndMask(matlabbatch, ...
-                                            opt, ...
-                                            opt.dir.output);
-      saveAndRunWorkflow(matlabbatch, 'create_mean_struc_mask', opt);
 
     case 'rfx'
 
@@ -140,7 +125,7 @@ function matlabbatch = bidsRFX(varargin)
 
   end
 
-  if ismember(lower(action), {'meananatandmask', 'rfx'})
+  if ismember(lower(action), {'rfx'})
     opt.pipeline.name = 'bidspm';
     opt.pipeline.type = 'groupStats';
     initBids(opt, 'description', description, 'force', false);
