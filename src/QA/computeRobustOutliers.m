@@ -127,7 +127,7 @@ function outliers = computeRobustOutliers(varargin)
 
     % robust outliers
     M = median(timeSeries);
-    CarlinK = (17.63 * n - 23.64) / (7.74 * n - 3.71); % Carling's k
+    CarlinK = (17.63 * n - 23.64) / (7.74 * n - 3.71);
     outliers = timeSeries < (M - CarlinK * values) | ...
                timeSeries > (M + CarlinK * values);
 

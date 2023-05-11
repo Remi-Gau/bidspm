@@ -14,11 +14,11 @@ end
 function test_boilerplate_stats_only()
 
   if ~bids.internal.is_github_ci()
-    % when not in CI the octache partials are not in the right place
-    return
+    msg = 'When not in CI the octache partials are not in the right place.';
+    moxunit_throw_test_skipped_exception(msg);
   end
 
-  outputPath = tmpName();
+  outputPath = tempName();
 
   opt = setOptions('MoAE');
 
@@ -45,11 +45,11 @@ end
 function test_boilerplate_preproc_only()
 
   if ~bids.internal.is_github_ci()
-    % when not in CI the octache partials are not in the right place
-    return
+    msg = 'When not in CI the octache partials are not in the right place.';
+    moxunit_throw_test_skipped_exception(msg);
   end
 
-  outputPath = tmpName();
+  outputPath = tempName();
 
   opt = setOptions('MoAE');
 
@@ -67,9 +67,4 @@ function test_boilerplate_preproc_only()
                              'preprocess_citation.md'), ...
                     'file'), ...
               2);
-end
-
-function pth = tmpName()
-  pth = tempname();
-  mkdir(pth);
 end

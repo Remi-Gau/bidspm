@@ -11,7 +11,8 @@ end
 function test_labelActivations_aal()
 
   if bids.internal.is_github_ci()
-    return
+    msg = 'No AAL in CI';
+    moxunit_throw_test_skipped_exception(msg);
   end
 
   csvFile = fullfile(getTestDataDir(), 'tsv_files', 'moae_results_table.csv');
